@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menu — Highstreet Cafe · Moradabad</title>
+<meta name="description" content="Explore the Highstreet Cafe menu — kulhad chai, flavoured teas, coffees, shakes, burgers, pizza, pasta and more. 100% vegetarian.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow:#fbc603; --yellow-light:#ffe98e; --yellow-dark:#d89e0e;
+    --dark:#0c0f0d; --dark-2:#0F1D22; --slate:#2d3c4b; --slate-light:#3a4c5e;
+    --text:#2b2b2d; --grey:#9a9f98; --grey-light:#D7D7D7;
+    --off:#f6f5f2; --white:#ffffff;
+    --font-body:"Poppins",-apple-system,"Segoe UI",sans-serif;
+    --font-head:"Khand","Poppins",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-body);background:var(--off);color:var(--text);line-height:1.55;font-size:16px;display:flex;flex-direction:column;min-height:100vh;}
+
+  .topbar{background:var(--slate);color:#fff;font-size:12.5px;display:flex;justify-content:center;gap:24px;padding:7px 16px;flex-wrap:wrap;}
+  .topbar a{color:var(--yellow);text-decoration:none;font-weight:500;}
+  @media (max-width:480px){ .topbar{font-size:11px;gap:14px;} }
+  header.site{position:sticky;top:0;z-index:90;background:var(--slate);box-shadow:0 0 30px rgba(0,0,0,.18);}
+  .nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;}
+  .logo{font-family:var(--font-head);font-weight:700;font-size:26px;letter-spacing:1px;color:#fff;text-decoration:none;text-transform:uppercase;line-height:1;}
+  .logo .accent{color:var(--yellow);}
+  .logo small{display:block;font-family:var(--font-body);font-size:9.5px;font-weight:400;letter-spacing:2.5px;color:var(--grey-light);text-transform:uppercase;margin-top:2px;}
+  .nav .links{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+  .nav .links a{
+    color:#fff;text-decoration:none;font-size:13.5px;font-weight:500;
+    padding:8px 14px;border-radius:40px;text-transform:uppercase;transition:.3s;
+  }
+  .nav .links a:hover{color:var(--yellow);}
+  .nav .links a.active{background:var(--yellow);color:#000;font-weight:600;}
+  @media (max-width:560px){
+    .nav{flex-direction:column;gap:8px;}
+    .nav .links a{padding:6px 10px;font-size:12px;}
+  }
+
+  .banner{position:relative;background:var(--dark-2);color:#fff;overflow:hidden;text-align:center;}
+  .banner::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 60% 80% at 85% 20%, rgba(251,198,3,.14), transparent 60%),
+      radial-gradient(ellipse 50% 70% at 10% 90%, rgba(45,60,75,.9), transparent 65%),
+      linear-gradient(120deg, var(--dark-2) 0%, #16262e 100%);
+  }
+  .banner::after{
+    content:'🫖';position:absolute;font-size:190px;opacity:.08;right:-24px;bottom:-52px;transform:rotate(-10deg);
+    pointer-events:none;line-height:1;
+  }
+  .banner .inner{position:relative;z-index:2;padding:52px 24px 58px;}
+  .banner .kicker{
+    display:inline-flex;align-items:center;gap:14px;font-family:var(--font-head);
+    font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow-light);font-weight:500;
+  }
+  .banner .kicker::before,.banner .kicker::after{content:'';width:3rem;height:1px;background:var(--yellow);}
+  .banner h1{
+    font-family:var(--font-head);font-size:clamp(38px,7vw,58px);font-weight:700;
+    line-height:1.08;text-transform:uppercase;margin:12px 0 8px;
+  }
+  .banner h1 .accent{color:var(--yellow);}
+  .banner .tag{font-size:15.5px;color:var(--grey-light);font-weight:300;}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px;width:100%;flex:1;}
+
+  /* sticky category pills */
+  .cat-nav{
+    position:sticky;top:74px;z-index:80;background:rgba(246,245,242,.92);backdrop-filter:blur(8px);
+    padding:12px 0;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;
+    border-bottom:1px solid #e4e1da;scrollbar-width:none;
+  }
+  .cat-nav::-webkit-scrollbar{display:none;}
+  .cat-nav .pill{
+    display:inline-block;background:#fff;border:1px solid #e4e1da;color:var(--text);
+    font-size:13px;font-weight:500;padding:8px 16px;border-radius:40px;margin-right:8px;
+    text-decoration:none;transition:.25s;
+  }
+  .cat-nav .pill:hover,.cat-nav .pill.on{background:var(--yellow);border-color:var(--yellow);color:#000;font-weight:600;}
+
+  .cat{padding:40px 0 8px;}
+  .cat-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+  .cat-head h2{
+    font-family:var(--font-head);font-size:clamp(26px,4vw,36px);font-weight:600;text-transform:uppercase;
+    color:var(--text);line-height:1;
+  }
+  .cat-head h2 .accent{color:var(--yellow-dark);}
+  .cat-head .count{
+    font-size:11.5px;color:var(--grey);background:#fff;border:1px solid #e4e1da;
+    border-radius:20px;padding:3px 12px;
+  }
+  .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+  .item{
+    background:#fff;border-radius:10px;padding:16px 18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:2px;
+    transition:.25s;border:1px solid transparent;
+  }
+  .item:hover{border-color:var(--yellow);}
+  .item b{font-size:14.5px;font-weight:600;color:var(--text);}
+  .item span{font-size:12px;color:var(--grey);line-height:1.5;}
+
+  .note{
+    background:#fff;border-radius:10px;padding:14px 18px;font-size:12.5px;color:var(--grey);
+    text-align:center;margin:28px 0 0;
+  }
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:30px 0 50px;}
+  .cta{
+    display:inline-block;text-decoration:none;padding:14px 30px;border-radius:40px;
+    font-weight:600;font-size:15px;transition:.3s;border:2px solid var(--slate);
+  }
+  .cta-yellow{background:var(--yellow);border-color:var(--yellow);color:#000;}
+  .cta-yellow:hover{background:transparent;color:var(--yellow-dark);}
+  .cta-dark{background:var(--slate);color:#fff;}
+  .cta-dark:hover{background:transparent;color:var(--slate);}
+
+  footer{background:var(--slate);color:#fff;text-align:center;padding:28px 20px;font-size:13px;margin-top:auto;}
+  footer .brand{font-family:var(--font-head);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+  footer .brand .accent{color:var(--yellow);}
+  footer .sub{color:var(--grey);font-size:11.5px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>📍 F-01, High Street, TDI City Gate, Kanth Road, Moradabad</span>
+  <a href="tel:+918279389592">📞 +91 82793 89592</a>
+  <a href="https://instagram.com/tealogy_cafe_moradabad" target="_blank" rel="noopener">📸 @tealogy_cafe_moradabad</a>
+</div>
+
+<header class="site">
+  <nav class="nav">
+    <a class="logo" href="index.html">High<span class="accent">street</span><small>A Tealogy Franchise</small></a>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="menu.html" class="active">Menu</a>
+      <a href="wifi.html">WiFi</a>
+      <a href="game.html">Game</a>
+    </div>
+  </nav>
+</header>
+
+<section class="banner">
+  <div class="inner">
+    <div class="kicker">Highstreet Cafe · 100% Vegetarian</div>
+    <h1>Our <span class="accent">Menu</span></h1>
+    <p class="tag">Chai in kulhads, fresh bites, and everything made to order</p>
+  </div>
+</section>
+
+<nav class="cat-nav" id="catnav">
+  <a class="pill" href="#desi-chai">Desi Chai</a>
+  <a class="pill" href="#flavoured-tea">Flavoured Tea</a>
+  <a class="pill" href="#healthy-tea">Healthy Tea</a>
+  <a class="pill" href="#filter-coffee">Filter Coffee</a>
+  <a class="pill" href="#coffee">Coffee</a>
+  <a class="pill" href="#hot-beverages">Hot Beverages</a>
+  <a class="pill" href="#cold-coffee">Cold Coffee</a>
+  <a class="pill" href="#shakes">Shakes</a>
+  <a class="pill" href="#fruit-shakes">Fruit Shakes</a>
+  <a class="pill" href="#smoothies">Smoothies</a>
+  <a class="pill" href="#iced-tea">Iced Tea</a>
+  <a class="pill" href="#mocktails">Mocktails</a>
+  <a class="pill" href="#summer-special">Summer Special</a>
+  <a class="pill" href="#ice-crush">Ice Crush</a>
+  <a class="pill" href="#tea-snacks">Tea-Snacks</a>
+  <a class="pill" href="#maggi">Maggi</a>
+  <a class="pill" href="#desi-food">Desi</a>
+  <a class="pill" href="#burger">Burger</a>
+  <a class="pill" href="#sandwich">Sandwich</a>
+  <a class="pill" href="#wraps">Wraps</a>
+  <a class="pill" href="#salad-bowl">Salad Bowl</a>
+  <a class="pill" href="#corn">Corn</a>
+  <a class="pill" href="#momos">Momos</a>
+  <a class="pill" href="#pasta">Pasta</a>
+  <a class="pill" href="#pizza">Pizza</a>
+  <a class="pill" href="#rice-bowl">Rice Bowl</a>
+  <a class="pill" href="#cheesecake">Cheesecake</a>
+  <a class="pill" href="#dessert">Dessert</a>
+  <a class="pill" href="#combos">Combos</a>
+  <a class="pill" href="#add-ons">Add-Ons</a>
+</nav>
+
+<div class="wrap">
+
+  <section class="cat" id="desi-chai">
+    <div class="cat-head"><h2>☕ Desi <span class="accent">Chai</span></h2><span class="count">9 items</span></div>
+    <div class="items">
+      <div class="item"><b>Cutting Chai</b><span>Strong, short, classic</span></div>
+      <div class="item"><b>Adrak Tea</b><span>Ginger warmth</span></div>
+      <div class="item"><b>Elaichi Tea</b><span>Cardamom-scented</span></div>
+      <div class="item"><b>Masala Tea</b><span>Spice blend, the favourite</span></div>
+      <div class="item"><b>Gud Wali Chai</b><span>Jaggery-sweetened</span></div>
+      <div class="item"><b>Baarish Wali Chai</b><span>Our house special chai</span></div>
+      <div class="item"><b>Hot Coffee</b><span>Frothy &amp; strong</span></div>
+      <div class="item"><b>Black Coffee</b><span>Pure and bold</span></div>
+      <div class="item"><b>Irish Hot Coffee</b><span>Creamy Irish style</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="flavoured-tea">
+    <div class="cat-head"><h2>🍵 Flavoured <span class="accent">Tea</span></h2><span class="count">5 items</span></div>
+    <div class="items">
+      <div class="item"><b>Chocolate Tea</b><span>Cocoa meets chai</span></div>
+      <div class="item"><b>Paan Tea</b><span>Signature paan flavour</span></div>
+      <div class="item"><b>Kesar Tea</b><span>Saffron-infused</span></div>
+      <div class="item"><b>Rose Tea</b><span>Floral &amp; fragrant</span></div>
+      <div class="item"><b>Mango Tea</b><span>Seasonal favourite</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="healthy-tea">
+    <div class="cat-head"><h2>🌱 Healthy <span class="accent">Tea</span></h2><span class="count">4 items</span></div>
+    <div class="items">
+      <div class="item"><b>Black Tea</b><span>Simple &amp; clean</span></div>
+      <div class="item"><b>Green Tea</b><span>Light &amp; healthy</span></div>
+      <div class="item"><b>Lemon Tea</b><span>Zesty refresh</span></div>
+      <div class="item"><b>Lemon Honey Tea</b><span>Soothing classic</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="filter-coffee">
+    <div class="cat-head"><h2>🫘 Filter <span class="accent">Coffee</span></h2><span class="count">6 items</span></div>
+    <div class="items">
+      <div class="item"><b>Classic South Indian Filter Coffee</b><span>Traditional brew</span></div>
+      <div class="item"><b>Strong Filter Coffee</b><span>Extra kick</span></div>
+      <div class="item"><b>Chocolate Filter Coffee</b><span>Mocha style</span></div>
+      <div class="item"><b>Caramel Filter Coffee</b><span>Sweet caramel notes</span></div>
+      <div class="item"><b>Vanilla Filter Coffee</b><span>Smooth vanilla</span></div>
+      <div class="item"><b>Hazelnut Filter Coffee</b><span>Nutty aroma</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="coffee">
+    <div class="cat-head"><h2>☕ <span class="accent">Coffee</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Hot Coffee</b><span>Café style</span></div>
+      <div class="item"><b>Black Coffee</b><span>No milk, all punch</span></div>
+      <div class="item"><b>Irish Hot Coffee</b><span>Rich &amp; creamy</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="hot-beverages">
+    <div class="cat-head"><h2>🍫 Hot <span class="accent">Beverages</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Hot Chocolate</b><span>Warm cocoa comfort</span></div>
+      <div class="item"><b>Belgian Hot Chocolate</b><span>Thick Belgian style</span></div>
+      <div class="item"><b>Kesar Badam Milk (Hot)</b><span>Saffron-almond milk</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cold-coffee">
+    <div class="cat-head"><h2>🧊 Cold <span class="accent">Coffee</span></h2><span class="count">2 items</span></div>
+    <div class="items">
+      <div class="item"><b>Cold Coffee</b><span>Chilled &amp; frothy</span></div>
+      <div class="item"><b>Brownie Frappe</b><span>Blended brownie goodness</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="shakes">
+    <div class="cat-head"><h2>🥤 <span class="accent">Shakes</span></h2><span class="count">6 items</span></div>
+    <div class="items">
+      <div class="item"><b>Chocolate Shake</b><span>Classic choco</span></div>
+      <div class="item"><b>Oreo Shake</b><span>Cookies &amp; cream</span></div>
+      <div class="item"><b>Kit Kat Shake</b><span>Crunchy wafer</span></div>
+      <div class="item"><b>Nutella Shake</b><span>Hazelnut spread blended</span></div>
+      <div class="item"><b>Chocolate Irish Shake</b><span>Irish cream flavour</span></div>
+      <div class="item"><b>Brownie Shake</b><span>Fudgy brownie</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="fruit-shakes">
+    <div class="cat-head"><h2>🍓 Fruit <span class="accent">Shakes</span></h2><span class="count">9 items</span></div>
+    <div class="items">
+      <div class="item"><b>Strawberry Shake</b></div>
+      <div class="item"><b>Mango Shake</b></div>
+      <div class="item"><b>Kiwi Shake</b></div>
+      <div class="item"><b>Caramel Shake</b></div>
+      <div class="item"><b>Blueberry Shake</b></div>
+      <div class="item"><b>Butter Scotch Shake</b></div>
+      <div class="item"><b>Vanilla Milk Shake</b></div>
+      <div class="item"><b>Kesar Thandaai Milkshake</b><span>Festive favourite</span></div>
+      <div class="item"><b>Chiku Milkshake</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="smoothies">
+    <div class="cat-head"><h2>🥭 <span class="accent">Smoothies</span></h2><span class="count">4 items</span></div>
+    <div class="items">
+      <div class="item"><b>Mango Smoothie</b></div>
+      <div class="item"><b>Mixberry Smoothie</b></div>
+      <div class="item"><b>Kiwi Smoothie</b></div>
+      <div class="item"><b>Banana Caramel Smoothie</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="iced-tea">
+    <div class="cat-head"><h2>🧋 Iced <span class="accent">Tea</span></h2><span class="count">4 items</span></div>
+    <div class="items">
+      <div class="item"><b>Lemon Iced Tea</b></div>
+      <div class="item"><b>Lemon Mint Iced Tea</b></div>
+      <div class="item"><b>Peach Iced Tea</b></div>
+      <div class="item"><b>Strawberry Iced Tea</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="mocktails">
+    <div class="cat-head"><h2>🍹 <span class="accent">Mocktails</span></h2><span class="count">5 items</span></div>
+    <div class="items">
+      <div class="item"><b>Virgin Mojito</b><span>The classic</span></div>
+      <div class="item"><b>Watermelon Mojito</b></div>
+      <div class="item"><b>Strawberry Mojito</b></div>
+      <div class="item"><b>Blue Curacao Mojito</b></div>
+      <div class="item"><b>Spicy Mango Mojito</b><span>Tangy twist</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="summer-special">
+    <div class="cat-head"><h2>🌞 Summer <span class="accent">Special</span></h2><span class="count">8 items</span></div>
+    <div class="items">
+      <div class="item"><b>Butter Milk</b></div>
+      <div class="item"><b>Raw Mango</b><span>Aam panna style</span></div>
+      <div class="item"><b>Classic Jeeru</b></div>
+      <div class="item"><b>Kesar Pista Lassi</b></div>
+      <div class="item"><b>Masala Lemonade</b></div>
+      <div class="item"><b>Shikanji</b></div>
+      <div class="item"><b>Kala Khatta</b></div>
+      <div class="item"><b>Chilli Guava</b><span>Spicy-sweet</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="ice-crush">
+    <div class="cat-head"><h2>❄️ Ice <span class="accent">Crush</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Kiwi Ice Crush</b></div>
+      <div class="item"><b>Blueberry Ice Crush</b></div>
+      <div class="item"><b>Strawberry Ice Crush</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="tea-snacks">
+    <div class="cat-head"><h2>🥪 Tea-<span class="accent">Snacks</span></h2><span class="count">8 items</span></div>
+    <div class="items">
+      <div class="item"><b>Butter Toast</b></div>
+      <div class="item"><b>Butter Maska Bun</b></div>
+      <div class="item"><b>Tealogy Special Maska Bun</b><span>House signature</span></div>
+      <div class="item"><b>Nutella Toast</b></div>
+      <div class="item"><b>Chilli Cheese Toast</b></div>
+      <div class="item"><b>French Fries</b></div>
+      <div class="item"><b>Peri Peri French Fries</b></div>
+      <div class="item"><b>Cheese Garlic Bread</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="maggi">
+    <div class="cat-head"><h2>🍜 <span class="accent">Maggi</span></h2><span class="count">5 items</span></div>
+    <div class="items">
+      <div class="item"><b>Masala Maggi</b></div>
+      <div class="item"><b>Vegetable Maggi</b></div>
+      <div class="item"><b>Cheese Butter Maggi</b></div>
+      <div class="item"><b>Cheese Corn Maggi</b></div>
+      <div class="item"><b>Punjabi Tadka Maggi</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="desi-food">
+    <div class="cat-head"><h2>🍛 <span class="accent">Desi</span></h2><span class="count">6 items</span></div>
+    <div class="items">
+      <div class="item"><b>Dabeli</b></div>
+      <div class="item"><b>Indori Poha</b></div>
+      <div class="item"><b>Dry Fruit Upma Mix</b></div>
+      <div class="item"><b>Masala Oats Meal</b></div>
+      <div class="item"><b>Pav Bhaji</b></div>
+      <div class="item"><b>Paneer Bhurji With Pav</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="burger">
+    <div class="cat-head"><h2>🍔 <span class="accent">Burger</span></h2><span class="count">5 items</span></div>
+    <div class="items">
+      <div class="item"><b>Aloo Tikki Burger</b><span>Crowd favourite</span></div>
+      <div class="item"><b>Masala Burger</b></div>
+      <div class="item"><b>Veggie Burger</b></div>
+      <div class="item"><b>Spicy Paneer Burger</b></div>
+      <div class="item"><b>Double Decker Burger</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="sandwich">
+    <div class="cat-head"><h2>🥖 <span class="accent">Sandwich</span></h2><span class="count">9 items</span></div>
+    <div class="items">
+      <div class="item"><b>Bombay Kaccha Sandwich</b><span>Street style</span></div>
+      <div class="item"><b>Masala Sandwich</b></div>
+      <div class="item"><b>Masala Cheese Sandwich</b></div>
+      <div class="item"><b>Veg Mayo Sandwich</b></div>
+      <div class="item"><b>Cheese Chutney Sandwich</b></div>
+      <div class="item"><b>Vegetable Club Sandwich</b><span>Triple layer</span></div>
+      <div class="item"><b>Jam With Cheese Sandwich</b></div>
+      <div class="item"><b>Paneer Taka Tak Sandwich</b></div>
+      <div class="item"><b>Cheese Corn Sandwich</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="wraps">
+    <div class="cat-head"><h2>🌯 <span class="accent">Wraps</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Aloo Wrap</b><span>Aloo patty, olives, jalapeño, veggies &amp; sauces</span></div>
+      <div class="item"><b>Veg Patty Wrap</b><span>Veg patty, olives, jalapeño, veggies &amp; sauces</span></div>
+      <div class="item"><b>Mexican Wrap</b><span>Paneer cubes, spicy Mexican sauces &amp; veggies</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="salad-bowl">
+    <div class="cat-head"><h2>🥗 <span class="accent">Salad Bowl</span></h2><span class="count">2 items</span></div>
+    <div class="items">
+      <div class="item"><b>Vegetable Salad Bowl</b></div>
+      <div class="item"><b>Paneer Salad Bowl</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="corn">
+    <div class="cat-head"><h2>🌽 <span class="accent">Corn</span></h2><span class="count">4 items</span></div>
+    <div class="items">
+      <div class="item"><b>Salted Corn</b></div>
+      <div class="item"><b>Peri Peri Masala Corn</b></div>
+      <div class="item"><b>Masala Corn</b></div>
+      <div class="item"><b>Cheese Corn</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="momos">
+    <div class="cat-head"><h2>🥟 <span class="accent">Momos</span></h2><span class="count">2 items</span></div>
+    <div class="items">
+      <div class="item"><b>Veg Momos</b></div>
+      <div class="item"><b>Paneer Momos</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="pasta">
+    <div class="cat-head"><h2>🍝 <span class="accent">Pasta</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Red Sauce Pasta</b></div>
+      <div class="item"><b>White Sauce Pasta</b></div>
+      <div class="item"><b>Mix Sauce Pasta</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="pizza">
+    <div class="cat-head"><h2>🍕 <span class="accent">Pizza</span></h2><span class="count">6 items · medium</span></div>
+    <div class="items">
+      <div class="item"><b>Kulhad Pizza</b><span>Baked in a kulhad — our signature</span></div>
+      <div class="item"><b>Just Margherita</b></div>
+      <div class="item"><b>Capsicum Delight</b></div>
+      <div class="item"><b>Vegetable Pizza</b></div>
+      <div class="item"><b>Tandoori Paneer Pizza</b></div>
+      <div class="item"><b>Corn Exotic Pizza</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="rice-bowl">
+    <div class="cat-head"><h2>🍚 Rice <span class="accent">Bowl</span></h2><span class="count">5 items · meal combo add-on</span></div>
+    <div class="items">
+      <div class="item"><b>Dal Chawal</b></div>
+      <div class="item"><b>Butter Khichdi</b></div>
+      <div class="item"><b>Rajma Rice</b></div>
+      <div class="item"><b>Dal Makhani With Rice</b></div>
+      <div class="item"><b>Paneer Butter Masala With Rice</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="cheesecake">
+    <div class="cat-head"><h2>🍰 <span class="accent">Cheesecake</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Mango Cheesecake</b></div>
+      <div class="item"><b>Strawberry Cheesecake</b></div>
+      <div class="item"><b>Blueberry Cheesecake</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="dessert">
+    <div class="cat-head"><h2>🍫 <span class="accent">Dessert</span></h2><span class="count">3 items</span></div>
+    <div class="items">
+      <div class="item"><b>Chocolate Brownie</b></div>
+      <div class="item"><b>Brownie With Ice Cream</b></div>
+      <div class="item"><b>Brownie With Hot Fudge</b></div>
+    </div>
+  </section>
+
+  <section class="cat" id="combos">
+    <div class="cat-head"><h2>🎁 <span class="accent">Combos</span></h2><span class="count">11 combos</span></div>
+    <div class="items">
+      <div class="item"><b>Butter Toast + Chai</b></div>
+      <div class="item"><b>Bun Maska + Chai</b></div>
+      <div class="item"><b>Bombay Kaccha Sandwich + Hot Coffee</b></div>
+      <div class="item"><b>Masala Tea + Fries</b></div>
+      <div class="item"><b>Masala Sandwich + Iced Tea</b></div>
+      <div class="item"><b>Cheese Corn Sandwich + Ginger Tea</b></div>
+      <div class="item"><b>Cheese Chutney Sandwich + Hot Chocolate</b></div>
+      <div class="item"><b>Aloo Tikki Burger + Fries + Cold Drink</b></div>
+      <div class="item"><b>Cheese Garlic Bread + White Sauce Pasta</b></div>
+      <div class="item"><b>Margherita Pizza + Mojito</b></div>
+      <div class="item"><b>Pizza + Fries + Brownie With Hot Fudge + 2 Cold Coffee</b><span>The full table feast</span></div>
+    </div>
+  </section>
+
+  <section class="cat" id="add-ons">
+    <div class="cat-head"><h2>➕ <span class="accent">Add-Ons</span></h2><span class="count">2 items</span></div>
+    <div class="items">
+      <div class="item"><b>Extra Cheese</b><span>On anything</span></div>
+      <div class="item"><b>Kulhad / Paper Cup</b><span>Serving style of your choice</span></div>
+    </div>
+  </section>
+
+  <p class="note">Prices available at the counter and on our order line · GST extra as per government rules · Everything on this menu is 100% vegetarian</p>
+
+  <div class="cta-row">
+    <a class="cta cta-yellow" href="tel:+918279389592">📞 Order Now: +91 82793 89592</a>
+    <a class="cta cta-dark" href="index.html">🫖 Back to Home</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="brand">High<span class="accent">street</span> Cafe</div>
+  <div class="sub">F-01, High Street, TDI City Gate, Kanth Road, Moradabad · A Tealogy Franchise</div>
+</footer>
+
+<script>
+/* highlight the pill of the section currently in view */
+(function(){
+  var pills=document.querySelectorAll('.cat-nav .pill');
+  var cats=document.querySelectorAll('.cat[id]');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        pills.forEach(function(p){p.classList.toggle('on', p.getAttribute('href')==='#'+e.target.id);});
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  cats.forEach(function(c){io.observe(c);});
+})();
+</script>
+
+</body>
+</html>
