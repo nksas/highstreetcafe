@@ -256,6 +256,38 @@
     .nav .links a{padding:10px 14px;}
     .qcard,.cta{padding-top:16px;padding-bottom:16px;}
   }
+
+  /* ───── social / instagram strip ───── */
+  .social_sec{background:var(--dark);}
+  .social_sec .sec_head{color:#fff;}
+  .social_sec .sec_sub{color:var(--grey);}
+  .insta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media (max-width:560px){ .insta-grid{grid-template-columns:repeat(2,1fr);} }
+  .insta-card{
+    position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1;
+    background:linear-gradient(150deg,var(--slate),var(--dark-2));
+    display:block;text-decoration:none;
+  }
+  .insta-card img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s;}
+  .insta-card:hover img{transform:scale(1.06);}
+  .insta-card .ig-badge{
+    position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+    display:flex;align-items:center;justify-content:center;font-size:13px;
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+  }
+  .insta-card .vid-badge{
+    position:absolute;top:8px;left:8px;font-size:13px;
+    background:rgba(0,0,0,.55);border-radius:50%;width:26px;height:26px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .insta-cta{
+    display:inline-flex;align-items:center;gap:10px;margin-top:24px;
+    background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);
+    color:#fff;text-decoration:none;padding:13px 30px;border-radius:40px;
+    font-weight:600;font-size:15px;transition:.3s;
+  }
+  .insta-cta:hover{opacity:.9;transform:translateY(-2px);}
 </style>
 </head>
 <body>
@@ -403,6 +435,38 @@
   </div>
 </section>
 
+<!-- instagram feed strip -->
+<section class="social_sec" id="social">
+  <div class="wrap">
+    <div class="center">
+      <div class="sec_label"><span class="deco">✦</span> Fresh On Instagram <span class="deco">✦</span></div>
+      <h2 class="sec_head">Follow The Chai Life</h2>
+      <p class="sec_sub">Tap any post to open it on Instagram — new chai, new dishes, new moments every week.</p>
+    </div>
+    <div class="insta-grid">
+      <a class="insta-card" href="https://www.instagram.com/tealogy_cafe_moradabad/p/DfQf6NNkqzj/" target="_blank" rel="noopener">
+        <img src="https://www.instagram.com/p/DfQf6NNkqzj/media/?size=l" alt="Latest from Tealogy Cafe Moradabad" loading="lazy">
+        <span class="ig-badge">📷</span>
+      </a>
+      <a class="insta-card" href="https://www.instagram.com/tealogy_cafe_moradabad/p/DfN_QdGki-2/" target="_blank" rel="noopener">
+        <img src="https://www.instagram.com/p/DfN_QdGki-2/media/?size=l" alt="Burger special at Tealogy Cafe" loading="lazy">
+        <span class="ig-badge">📷</span>
+      </a>
+      <a class="insta-card" href="https://www.instagram.com/tealogy_cafe_moradabad/reel/DfJ84NWo2zG/" target="_blank" rel="noopener">
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:linear-gradient(150deg,#3a4c5e,#0F1D22);">🎬</div>
+        <span class="ig-badge">📷</span><span class="vid-badge">▶</span>
+      </a>
+      <a class="insta-card" href="https://www.instagram.com/tealogy_cafe_moradabad/p/De_7yQNIUdp/" target="_blank" rel="noopener">
+        <img src="https://www.instagram.com/p/De_7yQNIUdp/media/?size=l" alt="Chow mein at Tealogy Cafe" loading="lazy">
+        <span class="ig-badge">📷</span>
+      </a>
+    </div>
+    <div style="text-align:center;">
+      <a class="insta-cta" href="https://instagram.com/tealogy_cafe_moradabad" target="_blank" rel="noopener">📸 Follow @tealogy_cafe_moradabad</a>
+    </div>
+  </div>
+</section>
+
 <!-- visit -->
 <section class="visit_sec">
   <div class="wrap">
@@ -499,5 +563,19 @@
 })();
 </script>
 
+
+<script>
+/* instagram thumbnails: swap to graceful placeholder if load fails */
+(function(){
+  document.querySelectorAll('.insta-card img').forEach(function(img){
+    img.addEventListener('error',function(){
+      var d=document.createElement('div');
+      d.style.cssText='width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(150deg,#3a4c5e,#0F1D22);';
+      d.textContent='📸';
+      img.replaceWith(d);
+    });
+  });
+})();
+</script>
 </body>
 </html>
