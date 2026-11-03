@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://highstreetcafe.in/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://highstreetcafe.in/menu.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/wifi.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/game.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/game/index.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/game/snake.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/game/memory.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://highstreetcafe.in/game/pour.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+</urlset>
