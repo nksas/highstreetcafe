@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perfect Pour — Tealogy Cafe Moradabad</title>
+<style>
+  :root{
+    --yellow:#fbc603; --yellow-dark:#d89e0e; --dark:#0c0f0d; --dark-2:#0F1D22;
+    --slate:#2d3c4b; --grey:#9a9f98; --grey-light:#D7D7D7;
+    --chai:#b9742e;
+    --font-body:"Poppins",-apple-system,"Segoe UI",sans-serif;
+    --font-head:"Khand","Poppins",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:var(--font-body);background:var(--dark-2);color:var(--grey-light);
+    min-height:100vh;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;
+  }
+  header{padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;background:var(--slate);flex:0 0 auto;}
+  header .brand{font-family:var(--font-head);font-weight:600;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+  header .brand .accent{color:var(--yellow);}
+  .hud{font-size:13px;color:#fff;font-weight:600;}
+  .hud .label{color:var(--grey);font-weight:400;font-size:11px;margin-right:3px;}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px;}
+  .instruction{font-size:13.5px;color:var(--grey);text-align:center;max-width:320px;}
+  .instruction b{color:var(--yellow-light);}
+
+  /* pour rig */
+  .rig{display:flex;align-items:flex-end;gap:26px;}
+  .glass{position:relative;width:110px;height:200px;border:3px solid var(--grey-light);border-top:none;
+    border-radius:0 0 22px 22px;overflow:hidden;background:rgba(255,255,255,.04);}
+  .chai{position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,#d98a55,var(--chai));transition:height .06s linear;}
+  .target-zone{position:absolute;left:0;right:0;background:rgba(251,198,3,.25);border-top:2px dashed var(--yellow);border-bottom:2px dashed var(--yellow);}
+  .target-line{position:absolute;left:0;right:0;height:2px;background:var(--yellow);}
+  .fill-label{position:absolute;top:8px;left:0;right:0;text-align:center;font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6);}
+  .kettle{font-size:64px;transform-origin:top center;}
+  .kettle.pouring{animation:tilt 1s ease-in-out infinite alternate;}
+  @keyframes tilt{from{transform:rotate(-8deg);}to{transform:rotate(18deg);}}
+  .steam{position:absolute;top:-30px;left:50%;font-size:22px;opacity:0;}
+  .steam.show{animation:rise 1.4s ease-out forwards;}
+  @keyframes rise{from{opacity:.8;transform:translateY(0);}to{opacity:0;transform:translateY(-34px);}}
+
+  .btn{
+    border:none;border-radius:40px;padding:18px 52px;font-size:18px;font-weight:700;
+    font-family:var(--font-body);background:var(--yellow);color:#000;cursor:pointer;transition:.15s;
+    box-shadow:0 6px 20px rgba(251,198,3,.25);
+  }
+  .btn:active{transform:scale(.95);}
+  .btn.stop{background:#e05c3a;color:#fff;box-shadow:0 6px 20px rgba(224,92,58,.3);}
+
+  .overlay{
+    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(12,15,13,.93);text-align:center;padding:24px;z-index:10;
+  }
+  .overlay.hidden{display:none;}
+  .overlay .cupline{font-size:44px;margin-bottom:6px;}
+  .overlay h1{font-family:var(--font-head);font-size:32px;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .overlay h2{font-family:var(--font-head);font-size:28px;color:var(--yellow);text-transform:uppercase;margin-bottom:8px;}
+  .overlay p{font-size:14px;line-height:1.6;max-width:330px;margin-bottom:6px;}
+  .diff-row{display:flex;gap:8px;margin:14px 0 4px;}
+  .diff-btn{
+    border:2px solid var(--slate);background:transparent;color:var(--grey-light);
+    font-family:var(--font-body);font-size:13.5px;font-weight:500;padding:10px 18px;border-radius:40px;cursor:pointer;transition:.25s;
+  }
+  .diff-btn.on{background:var(--yellow);border-color:var(--yellow);color:#000;font-weight:600;}
+  .diff-note{font-size:11.5px;color:var(--grey);margin-top:6px;}
+  .small-btn{
+    border:none;border-radius:40px;padding:13px 34px;font-size:15px;font-weight:600;
+    font-family:var(--font-body);background:var(--yellow);color:#000;cursor:pointer;margin-top:16px;
+  }
+  .best{font-size:12.5px;color:var(--grey);margin-top:14px;}
+  footer{flex:0 0 auto;text-align:center;padding:6px;font-size:11px;color:var(--grey);background:var(--slate);}
+  footer strong{color:var(--yellow);font-weight:600;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">🫖 Perfect <span class="accent">Pour</span></span>
+  <div class="hud">
+    <span><span class="label">Round</span><span id="round">1/8</span></span>
+    <span><span class="label">Score</span><span id="score">0</span></span>
+  </div>
+</header>
+
+<main>
+  <p class="instruction" id="instruction">Tap <b>POUR</b> to start filling the kulhad — tap <b>STOP</b> inside the yellow zone. Spill it and you lose the round!</p>
+  <div class="rig">
+    <div class="glass" id="glass">
+      <div class="target-zone" id="zone"></div>
+      <div class="target-line" id="line"></div>
+      <div class="chai" id="chai"></div>
+      <div class="fill-label" id="fillLabel"></div>
+    </div>
+    <div class="kettle" id="kettle">🫖</div>
+  </div>
+  <button class="btn" id="mainBtn">POUR ☕</button>
+</main>
+
+<div class="overlay" id="startScreen">
+  <div class="cupline">🫖</div>
+  <h1>Perfect Pour</h1>
+  <p>Fill each kulhad to the target line — but the pour speeds up! Tap to start, tap again to stop in the zone.</p>
+  <p>Overflow = spilled chai = sad kulhad. 😢</p>
+  <div class="diff-row" id="diffRow">
+    <button class="diff-btn" data-d="easy">Easy</button>
+    <button class="diff-btn on" data-d="medium">Medium</button>
+    <button class="diff-btn" data-d="hard">Hard</button>
+  </div>
+  <p class="diff-note" id="diffNote">8 rounds · steady speed-up</p>
+  <button class="small-btn" id="startBtn">Start Pouring ☕</button>
+  <p class="best" id="bestLine"></p>
+</div>
+
+<div class="overlay hidden" id="endScreen">
+  <div class="cupline" id="endEmoji">🫖</div>
+  <h2 id="endTitle"></h2>
+  <p id="endMsg"></p>
+  <p style="font-style:italic;color:var(--yellow-light);font-size:13.5px;">"A cup full of happiness for your soul!"</p>
+  <button class="small-btn" id="againBtn">Pour Again ☕</button>
+  <p class="best" id="endBest"></p>
+</div>
+
+<footer>While your meal is being prepared with love · <strong>Tealogy Cafe</strong></footer>
+
+<script>
+(function(){
+  var DIFFS={
+    easy:  {speed:26, speedup:1.5, zoneH:22, rounds:6, note:'6 rounds · generous zone'},
+    medium:{speed:34, speedup:2.2, zoneH:16, rounds:8, note:'8 rounds · steady speed-up'},
+    hard:  {speed:44, speedup:3.2, zoneH:11, rounds:10, note:'10 rounds · fast pour, tight zone'}
+  };
+  var diff='medium';
+  var fill=0, pouring=false, speed=0, round=0, score=0, target=0, zoneTop=0, zoneH=0, raf=null, lastTs=0;
+  var best={};
+  try{ best=JSON.parse(localStorage.getItem('perfect_pour_best')||'{}'); }catch(e){}
+
+  var chai=document.getElementById('chai'), zone=document.getElementById('zone'),
+      line=document.getElementById('line'), mainBtn=document.getElementById('mainBtn'),
+      kettle=document.getElementById('kettle'), fillLabel=document.getElementById('fillLabel');
+
+  function showBest(){
+    var b=best[diff];
+    document.getElementById('bestLine').textContent = b?('Best ('+diff+'): '+b):'';
+  }
+
+  function newRound(){
+    round++;
+    if(round>DIFFS[diff].rounds) return end(true);
+    document.getElementById('round').textContent=round+'/'+DIFFS[diff].rounds;
+    target = 55 + Math.random()*35;                 // target % between 55-90
+    zoneH = DIFFS[diff].zoneH;
+    zoneTop = Math.max(8, target - zoneH/2);
+    zone.style.bottom = zoneTop+'%';
+    zone.style.height = zoneH+'%';
+    line.style.bottom = target+'%';
+    fill=0; speed=DIFFS[diff].speed + (round-1)*DIFFS[diff].speedup;
+    chai.style.height='0%';
+    fillLabel.textContent='';
+    mainBtn.textContent='POUR ☕'; mainBtn.classList.remove('stop');
+    pouring=false;
+    kettle.classList.remove('pouring');
+  }
+
+  function loop(ts){
+    if(!pouring) return;
+    if(!lastTs) lastTs=ts;
+    var dt=(ts-lastTs)/1000; lastTs=ts;
+    fill += speed*dt;
+    if(fill>=100){ fill=100; render(); return spill(); }
+    render();
+    raf=requestAnimationFrame(loop);
+  }
+
+  function render(){
+    chai.style.height=fill+'%';
+    fillLabel.textContent=Math.round(fill)+'%';
+  }
+
+  function stopPoint(){
+    pouring=false; cancelAnimationFrame(raf); kettle.classList.remove('pouring');
+    var dist=Math.abs(fill-target);
+    if(fill>=zoneTop && fill<=zoneTop+zoneH){
+      // perfect = within 1/3 of zone
+      var pts = dist<=zoneH/6 ? 100 : (dist<=zoneH/3 ? 70 : 40);
+      score+=pts;
+      document.getElementById('score').textContent=score;
+      fillLabel.textContent = pts===100?'PERFECT!':'+'+pts;
+      mainBtn.textContent='NEXT CUP ☕';
+      mainBtn.onclick=nextRound;
+      // celebratory steam
+      var s=document.createElement('span');
+      s.className='steam show'; s.textContent='✨';
+      s.style.left='55%';
+      document.getElementById('glass').appendChild(s);
+      setTimeout(function(){s.remove();},1500);
+    } else if(fill<zoneTop){
+      fillLabel.textContent='Too little!';
+      mainBtn.textContent='NEXT CUP ☕'; mainBtn.onclick=nextRound;
+    } else {
+      spill();
+    }
+  }
+
+  function spill(){
+    pouring=false; cancelAnimationFrame(raf); kettle.classList.remove('pouring');
+    fillLabel.textContent='SPILLED! 😢';
+    score=Math.max(0,score-30);
+    document.getElementById('score').textContent=score;
+    mainBtn.textContent='NEXT CUP ☕';
+    mainBtn.onclick=nextRound;
+  }
+
+  function nextRound(){ mainBtn.onclick=handleTap; newRound(); }
+
+  function handleTap(){
+    if(!pouring){
+      pouring=true; lastTs=0;
+      kettle.classList.add('pouring');
+      mainBtn.textContent='STOP! 🖐'; mainBtn.classList.add('stop');
+      raf=requestAnimationFrame(loop);
+    } else {
+      stopPoint();
+    }
+  }
+
+  function end(completed){
+    var isBest = !best[diff] || score>best[diff];
+    if(isBest){ best[diff]=score; try{localStorage.setItem('perfect_pour_best',JSON.stringify(best));}catch(e){} }
+    var max=DIFFS[diff].rounds*100;
+    var pct=score/max;
+    document.getElementById('endEmoji').textContent = pct>=0.8?'🏆':pct>=0.5?'🫖':'💧';
+    document.getElementById('endTitle').textContent = pct>=0.8?'Master Pourer!':pct>=0.5?'Great Barista!':'Chai Spill Survivor';
+    document.getElementById('endMsg').textContent = 'Final score: '+score+' of '+max+' possible';
+    document.getElementById('endBest').textContent = isBest?'🎉 New personal best!':'Best ('+diff+'): '+best[diff];
+    document.getElementById('endScreen').classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.diff-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.diff-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      diff=b.getAttribute('data-d');
+      document.getElementById('diffNote').textContent=DIFFS[diff].note;
+      showBest();
+    });
+  });
+
+  function start(){
+    round=0; score=0;
+    document.getElementById('score').textContent='0';
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.add('hidden');
+    mainBtn.onclick=handleTap;
+    newRound();
+  }
+  document.getElementById('startBtn').addEventListener('click',start);
+  document.getElementById('againBtn').addEventListener('click',start);
+  mainBtn.onclick=handleTap;
+  showBest();
+})();
+</script>
+</body>
+</html>

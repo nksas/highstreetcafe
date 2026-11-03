@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kulhad Memory Match — Tealogy Cafe Moradabad</title>
+<style>
+  :root{
+    --yellow:#fbc603; --yellow-dark:#d89e0e; --dark:#0c0f0d; --dark-2:#0F1D22;
+    --slate:#2d3c4b; --grey:#9a9f98; --grey-light:#D7D7D7;
+    --font-body:"Poppins",-apple-system,"Segoe UI",sans-serif;
+    --font-head:"Khand","Poppins",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:var(--font-body);background:var(--dark-2);color:var(--grey-light);min-height:100vh;
+    display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;
+  }
+  header{padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;background:var(--slate);flex:0 0 auto;}
+  header .brand{font-family:var(--font-head);font-weight:600;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+  header .brand .accent{color:var(--yellow);}
+  .hud{display:flex;gap:14px;font-size:13px;color:#fff;font-weight:600;}
+  .hud .label{color:var(--grey);font-weight:400;font-size:11px;margin-right:3px;}
+  main{flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 12px 20px;}
+  .board{display:grid;gap:8px;width:100%;max-width:420px;}
+  .card{
+    aspect-ratio:1;background:linear-gradient(150deg,var(--slate),#1d2c38);
+    border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-size:clamp(24px,8vw,34px);cursor:pointer;transition:transform .15s ease;
+    border:2px solid rgba(255,255,255,.08);
+  }
+  .card .back{font-size:22px;opacity:.5;}
+  .card.flip{background:#fff;border-color:var(--yellow);transform:rotateY(0);}
+  .card.done{background:rgba(251,198,3,.18);border-color:var(--yellow);opacity:.75;}
+  .card:active{transform:scale(.95);}
+
+  .overlay{
+    position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(12,15,13,.93);text-align:center;padding:24px;z-index:10;
+  }
+  .overlay.hidden{display:none;}
+  .overlay .cupline{font-size:44px;margin-bottom:6px;}
+  .overlay h1{font-family:var(--font-head);font-size:32px;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .overlay h2{font-family:var(--font-head);font-size:28px;color:var(--yellow);text-transform:uppercase;margin-bottom:8px;}
+  .overlay p{font-size:14px;line-height:1.6;max-width:320px;margin-bottom:6px;}
+  .diff-row{display:flex;gap:8px;margin:14px 0 4px;}
+  .diff-btn{
+    border:2px solid var(--slate);background:transparent;color:var(--grey-light);
+    font-family:var(--font-body);font-size:13.5px;font-weight:500;padding:10px 18px;border-radius:40px;cursor:pointer;transition:.25s;
+  }
+  .diff-btn.on{background:var(--yellow);border-color:var(--yellow);color:#000;font-weight:600;}
+  .diff-note{font-size:11.5px;color:var(--grey);margin-top:6px;}
+  .btn{
+    border:none;border-radius:40px;padding:14px 36px;font-size:16px;font-weight:600;
+    font-family:var(--font-body);background:var(--yellow);color:#000;cursor:pointer;margin-top:16px;transition:.25s;
+  }
+  .btn:active{transform:scale(.96);}
+  .best{font-size:12.5px;color:var(--grey);margin-top:14px;}
+  footer{flex:0 0 auto;text-align:center;padding:6px;font-size:11px;color:var(--grey);background:var(--slate);}
+  footer strong{color:var(--yellow);font-weight:600;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">🫖 Kulhad <span class="accent">Memory</span></span>
+  <div class="hud">
+    <span><span class="label">Moves</span><span id="moves">0</span></span>
+    <span><span class="label">Time</span><span id="time">0s</span></span>
+    <span><span class="label">Pairs</span><span id="pairs">0/8</span></span>
+  </div>
+</header>
+
+<main>
+  <div class="board" id="board"></div>
+</main>
+
+<div class="overlay" id="startScreen">
+  <div class="cupline">🍵</div>
+  <h1>Kulhad Memory</h1>
+  <p>Flip the kulhads and find matching pairs. Fewer moves, faster time — better chai master.</p>
+  <div class="diff-row" id="diffRow">
+    <button class="diff-btn" data-d="easy">Easy 4×3</button>
+    <button class="diff-btn on" data-d="medium">Medium 4×4</button>
+    <button class="diff-btn" data-d="hard">Hard 4×5</button>
+  </div>
+  <p class="diff-note" id="diffNote">16 cards · 8 pairs</p>
+  <button class="btn" id="startBtn">Start Matching 🫖</button>
+  <p class="best" id="bestLine"></p>
+</div>
+
+<div class="overlay hidden" id="endScreen">
+  <div class="cupline" id="endEmoji">🏆</div>
+  <h2 id="endTitle">All Matched!</h2>
+  <p id="endMsg"></p>
+  <p class="tagline" style="font-style:italic;color:var(--yellow-light);font-size:13.5px;">"A cup full of happiness for your soul!"</p>
+  <button class="btn" id="againBtn">Play Again 🍵</button>
+  <p class="best" id="endBest"></p>
+</div>
+
+<footer>While your meal is being prepared with love · <strong>Tealogy Cafe</strong></footer>
+
+<script>
+(function(){
+  var EMOJI=['🫖','🍵','🍪','🧁','🌶️','☕','🍰','🥤','🫙','🍯','🥐','🧉'];
+  var LAYOUT={easy:{cols:4,pairs:6,note:'12 cards · 6 pairs'},medium:{cols:4,pairs:8,note:'16 cards · 8 pairs'},hard:{cols:5,pairs:10,note:'20 cards · 10 pairs'}};
+  var diff='medium';
+  var board=document.getElementById('board');
+  var first=null,lock=false,moves=0,found=0,pairs=0,started=false,startTs=0,timer=null;
+  var best={};
+  try{ best=JSON.parse(localStorage.getItem('kulhad_memory_best')||'{}'); }catch(e){}
+
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  function showBest(){
+    var b=best[diff];
+    document.getElementById('bestLine').textContent = b?('Best ('+LAYOUT[diff].cols+'×'+(LAYOUT[diff].pairs*2/LAYOUT[diff].cols)+'): '+b+' moves'):'';
+  }
+
+  function build(){
+    var L=LAYOUT[diff];
+    pairs=L.pairs;
+    var picks=shuffle(EMOJI.slice()).slice(0,pairs);
+    var deck=shuffle(picks.concat(picks));
+    board.innerHTML='';
+    board.style.gridTemplateColumns='repeat('+L.cols+',1fr)';
+    deck.forEach(function(e){
+      var c=document.createElement('div');
+      c.className='card';
+      c.setAttribute('data-e',e);
+      c.innerHTML='<span class="back">🫖</span>';
+      c.addEventListener('click',function(){flip(c);});
+      board.appendChild(c);
+    });
+    moves=0; found=0; started=false;
+    document.getElementById('moves').textContent='0';
+    document.getElementById('pairs').textContent='0/'+pairs;
+    document.getElementById('time').textContent='0s';
+    first=null; lock=false;
+  }
+
+  function flip(c){
+    if(lock||c.classList.contains('flip')||c.classList.contains('done')) return;
+    if(!started){ started=true; startTs=Date.now(); timer=setInterval(tick,500); }
+    c.classList.add('flip');
+    c.textContent=c.getAttribute('data-e');
+    if(!first){ first=c; return; }
+    moves++; document.getElementById('moves').textContent=moves;
+    if(first.getAttribute('data-e')===c.getAttribute('data-e')){
+      first.classList.add('done'); c.classList.add('done');
+      first.classList.remove('flip'); c.classList.remove('flip');
+      first=null; found++;
+      document.getElementById('pairs').textContent=found+'/'+pairs;
+      if(found===pairs) end();
+    } else {
+      lock=true;
+      var a=first; first=null;
+      setTimeout(function(){
+        a.classList.remove('flip'); a.innerHTML='<span class="back">🫖</span>';
+        c.classList.remove('flip'); c.innerHTML='<span class="back">🫖</span>';
+        lock=false;
+      },700);
+    }
+  }
+
+  function tick(){
+    document.getElementById('time').textContent=Math.floor((Date.now()-startTs)/1000)+'s';
+  }
+
+  function end(){
+    clearInterval(timer);
+    var secs=Math.floor((Date.now()-startTs)/1000);
+    var isBest = !best[diff] || moves<best[diff];
+    if(isBest){ best[diff]=moves; try{localStorage.setItem('kulhad_memory_best',JSON.stringify(best));}catch(e){} }
+    var rating = moves<=pairs+2?'🧠 Chai Genius!':moves<=pairs+5?'☕ Sharp Memory!':'🍵 All Matched!';
+    document.getElementById('endEmoji').textContent = moves<=pairs+2?'🏆':'🫖';
+    document.getElementById('endTitle').textContent = rating;
+    document.getElementById('endMsg').textContent = moves+' moves · '+secs+' seconds';
+    document.getElementById('endBest').textContent = isBest?'🎉 New personal best!':'Your best: '+best[diff]+' moves';
+    document.getElementById('endScreen').classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.diff-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.diff-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      diff=b.getAttribute('data-d');
+      document.getElementById('diffNote').textContent=LAYOUT[diff].note;
+      showBest();
+    });
+  });
+
+  function start(){
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.add('hidden');
+    build();
+  }
+  document.getElementById('startBtn').addEventListener('click',start);
+  document.getElementById('againBtn').addEventListener('click',start);
+
+  build();
+  showBest();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Kulhad Snake — Tealogy Cafe Moradabad</title>
+<style>
+  :root{
+    --yellow:#fbc603; --yellow-dark:#d89e0e; --dark:#0c0f0d; --dark-2:#0F1D22;
+    --slate:#2d3c4b; --grey:#9a9f98; --grey-light:#D7D7D7; --green:#5f7a4a;
+    --font-body:"Poppins",-apple-system,"Segoe UI",sans-serif;
+    --font-head:"Khand","Poppins",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;}
+  body{
+    font-family:var(--font-body);background:var(--dark-2);color:var(--grey-light);
+    display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;touch-action:none;
+  }
+  header{padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;background:var(--slate);flex:0 0 auto;}
+  header .brand{font-family:var(--font-head);font-weight:600;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+  header .brand .accent{color:var(--yellow);}
+  header .scorebox{font-size:14px;font-weight:600;color:#fff;}
+  header .scorebox .label{color:var(--grey);font-weight:400;margin-right:4px;font-size:12px;}
+  #stage{position:relative;flex:1 1 auto;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;touch-action:none;}
+
+  .overlay{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(12,15,13,.9);text-align:center;padding:24px;z-index:10;
+  }
+  .overlay.hidden{display:none;}
+  .overlay .cupline{font-size:44px;margin-bottom:6px;}
+  .overlay h1{font-family:var(--font-head);font-size:34px;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .overlay h2{font-family:var(--font-head);font-size:28px;color:var(--yellow);text-transform:uppercase;margin-bottom:8px;}
+  .overlay p{font-size:14px;line-height:1.6;max-width:330px;margin-bottom:6px;}
+  .tagline{font-style:italic;color:var(--yellow-light);margin:8px 0 4px;font-size:13.5px;}
+
+  /* difficulty pills */
+  .diff-row{display:flex;gap:8px;margin:14px 0 4px;}
+  .diff-btn{
+    border:2px solid var(--slate);background:transparent;color:var(--grey-light);
+    font-family:var(--font-body);font-size:13.5px;font-weight:500;padding:10px 20px;border-radius:40px;cursor:pointer;transition:.25s;
+  }
+  .diff-btn.on{background:var(--yellow);border-color:var(--yellow);color:#000;font-weight:600;}
+  .diff-note{font-size:11.5px;color:var(--grey);margin-top:6px;}
+
+  .btn{
+    border:none;border-radius:40px;padding:14px 38px;font-size:16px;font-weight:600;
+    font-family:var(--font-body);background:var(--yellow);color:#000;cursor:pointer;margin-top:16px;transition:.25s;
+  }
+  .btn:active{transform:scale(.96);}
+  .best{font-size:12.5px;color:var(--grey);margin-top:14px;}
+
+  /* swipe hint */
+  .swipe-hint{display:flex;gap:14px;margin-top:12px;font-size:22px;}
+  footer{flex:0 0 auto;text-align:center;padding:6px;font-size:11px;color:var(--grey);background:var(--slate);}
+  footer strong{color:var(--yellow);font-weight:600;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">🐍 Kulhad <span class="accent">Snake</span></span>
+  <span class="scorebox"><span class="label">Score</span><span id="score">0</span></span>
+</header>
+
+<div id="stage">
+  <canvas id="cv"></canvas>
+
+  <div class="overlay" id="startScreen">
+    <div class="cupline">🐍</div>
+    <h1>Kulhad Snake</h1>
+    <p>Swipe to steer the snake. Eat chai &amp; treats to grow — every treat adds a kulhad to the shelf!</p>
+    <p>🌶️ Chillies end the run — and walls are solid.</p>
+    <div class="diff-row" id="diffRow">
+      <button class="diff-btn" data-d="easy">Easy</button>
+      <button class="diff-btn on" data-d="medium">Medium</button>
+      <button class="diff-btn" data-d="hard">Hard</button>
+    </div>
+    <p class="diff-note" id="diffNote">Classic speed — walls are solid</p>
+    <button class="btn" id="startBtn">Start Slithering 🐍</button>
+    <p class="best" id="bestLine"></p>
+    <div class="swipe-hint"><span>⬅️</span><span>➡️</span><span>⬆️</span><span>⬇️</span></div>
+  </div>
+
+  <div class="overlay hidden" id="endScreen">
+    <div class="cupline" id="endEmoji">🫖</div>
+    <h2 id="endTitle">Chai Break Over!</h2>
+    <p id="endMsg"></p>
+    <p class="tagline" id="endQuip"></p>
+    <button class="btn" id="againBtn">One More Run 🐍</button>
+    <p class="best" id="endBest"></p>
+  </div>
+</div>
+
+<footer>While your meal is being prepared with love · <strong>Tealogy Cafe</strong></footer>
+
+<script>
+(function(){
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  var stage=document.getElementById('stage');
+  var scoreEl=document.getElementById('score');
+
+  var DIFFS={
+    easy:  {tick:150, note:'Relaxed pace — room to think', label:'Easy'},
+    medium:{tick:110, note:'Classic speed — walls are solid', label:'Medium'},
+    hard:  {tick:75,  note:'Fast & furious — one wrong swipe ends it', label:'Hard'}
+  };
+  var diff='medium';
+
+  var GRID=18, CELL=20, PAD=10;
+  var W=0,H=0,COLS=0,ROWS=0;
+  var snake,dir,nextDir,food,treat,score,treats,running=false,dead=false,timer=null,lastTs=0,acc=0;
+  var best={easy:0,medium:0,hard:0};
+  try{
+    best=JSON.parse(localStorage.getItem('kulhad_snake_best')||'{}');
+    ['easy','medium','hard'].forEach(function(k){ if(typeof best[k]!=='number') best[k]=0; });
+  }catch(e){}
+
+  function resize(){
+    var r=stage.getBoundingClientRect();
+    W=Math.floor(r.width)-PAD*2; H=Math.floor(r.height)-PAD*2;
+    COLS=Math.max(10,Math.floor(W/CELL)); ROWS=Math.max(10,Math.floor(H/CELL));
+    cv.width=COLS*CELL; cv.height=ROWS*CELL;
+    cv.style.width=(COLS*CELL)+'px'; cv.style.height=(ROWS*CELL)+'px';
+    if(!running&&!dead) drawIdle();
+  }
+  window.addEventListener('resize',resize);
+
+  function freeCell(){
+    var taken={};
+    snake.forEach(function(s){taken[s.x+','+s.y]=1;});
+    var c;
+    do{ c={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}; }
+    while(taken[c.x+','+c.y]);
+    return c;
+  }
+
+  var TREATS=['🫖','🍵','🍪','🧁'];
+  function spawnFood(){ food=freeCell(); food.emoji=TREATS[Math.floor(Math.random()*TREATS.length)]; }
+  function spawnTreat(){
+    if(treat) return;
+    if(Math.random()<0.3){ treat=freeCell(); treat.emoji='🌶️'; treat.until=Date.now()+5000; }
+  }
+
+  function start(){
+    diff=document.querySelector('.diff-btn.on').getAttribute('data-d');
+    snake=[{x:Math.floor(COLS/2),y:Math.floor(ROWS/2)}];
+    dir={x:1,y:0}; nextDir=dir; score=0; treats=0; dead=false;
+    scoreEl.textContent='0';
+    spawnFood(); treat=null;
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.add('hidden');
+    running=true; lastTs=0; acc=0;
+    requestAnimationFrame(loop);
+  }
+
+  function end(){
+    running=false; dead=true;
+    clearInterval(timer);
+    var b=best[diff], isBest=score>b;
+    if(isBest){ best[diff]=score; try{localStorage.setItem('kulhad_snake_best',JSON.stringify(best));}catch(e){} }
+    document.getElementById('endEmoji').textContent = score>=120?'🏆':score>=60?'🫖':'🌶️';
+    document.getElementById('endTitle').textContent = score>=120?'Snake Chai Master!':score>=60?'Great Slither!':'Chai Break Over!';
+    document.getElementById('endMsg').textContent = 'You collected '+treats+' treats on '+DIFFS[diff].label+'. Score: '+score;
+    document.getElementById('endQuip').textContent = '"A cup full of happiness for your soul!"';
+    document.getElementById('endBest').textContent = isBest?'🎉 New personal best for '+DIFFS[diff].label+'!':'Best ('+DIFFS[diff].label+'): '+best[diff];
+    document.getElementById('endScreen').classList.remove('hidden');
+    showStartBest();
+  }
+
+  function step(){
+    dir=nextDir;
+    var head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+    // walls kill
+    if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS){ return end(); }
+    // self collision
+    for(var i=0;i<snake.length-1;i++){ if(snake[i].x===head.x&&snake[i].y===head.y) return end(); }
+    snake.unshift(head);
+    var grew=false;
+    if(head.x===food.x&&head.y===food.y){
+      grew=true; score+=10; treats++;
+      scoreEl.textContent=score;
+      spawnFood(); spawnTreat();
+    }
+    if(treat&&head.x===treat.x&&head.y===treat.y){
+      grew=true; treat=null;
+      if(snake.length>2) snake.pop(); // chilli shrinks instead of killing on easy feel
+      score=Math.max(0,score-15);
+      scoreEl.textContent=score;
+    }
+    if(treat&&Date.now()>treat.until) treat=null;
+    if(!grew) snake.pop();
+  }
+
+  function drawCell(c,emoji,size){
+    ctx.font=(CELL-4)+'px serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(emoji,(c.x+0.5)*CELL,(c.y+0.5)*CELL);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // checkerboard
+    for(var y=0;y<ROWS;y++)for(var x=0;x<COLS;x++){
+      ctx.fillStyle=((x+y)%2===0)?'#132028':'#101b22';
+      ctx.fillRect(x*CELL,y*CELL,CELL,CELL);
+    }
+    // food
+    if(food) drawCell(food,food.emoji);
+    // treat (chilli) with pulse
+    if(treat){
+      var pulse=1+0.12*Math.sin(Date.now()/120);
+      ctx.save(); ctx.globalAlpha=0.95;
+      ctx.font=(CELL-4)*pulse+'px serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('🌶️',(treat.x+0.5)*CELL,(treat.y+0.5)*CELL);
+      ctx.restore();
+    }
+    // snake — head is kulhad-colored, body fades
+    for(var i=snake.length-1;i>=0;i--){
+      var s=snake[i], t=i/Math.max(snake.length-1,1);
+      ctx.beginPath();
+      ctx.fillStyle = i===0 ? '#fbc603' : ('rgba(95,160,120,'+(0.95-t*0.55)+')');
+      var pad2 = i===0?2:3;
+      var r=5;
+      var x=s.x*CELL+pad2, yy=s.y*CELL+pad2, w=CELL-pad2*2;
+      ctx.moveTo(x+r,yy);
+      ctx.arcTo(x+w,yy,x+w,yy+w,r); ctx.arcTo(x+w,yy+w,x,yy+w,r);
+      ctx.arcTo(x,yy+w,x,yy,r); ctx.arcTo(x,yy,x+w,yy,r);
+      ctx.fill();
+    }
+    // eyes on head
+    if(snake.length){
+      var h=snake[0];
+      ctx.fillStyle='#0c0f0d';
+      var ex=h.x*CELL+CELL/2, ey=h.y*CELL+CELL/2;
+      var r2=2;
+      [[-3.5,-3.5],[3.5,-3.5]].forEach(function(o){
+        var ox=dir.y!==0?o[0]:o[0]*0.4, oy=dir.x!==0?o[1]*0.4:o[1];
+        ctx.beginPath(); ctx.arc(ex+ox+dir.x*2, ey+oy+dir.y*2, r2, 0, Math.PI*2); ctx.fill();
+      });
+    }
+  }
+
+  function drawIdle(){ if(snake){draw();} }
+
+  function loop(ts){
+    if(!running) return;
+    if(!lastTs) lastTs=ts;
+    var dt=ts-lastTs; lastTs=ts; acc+=dt;
+    while(acc>=DIFFS[diff].tick){ acc-=DIFFS[diff].tick; step(); if(!running) return; }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // input: swipe
+  var tsx=0,tsy=0;
+  stage.addEventListener('touchstart',function(e){
+    tsx=e.touches[0].clientX; tsy=e.touches[0].clientY;
+  },{passive:true});
+  stage.addEventListener('touchmove',function(e){ if(running) e.preventDefault(); },{passive:false});
+  stage.addEventListener('touchend',function(e){
+    if(!running) return;
+    var dx=e.changedTouches[0].clientX-tsx, dy=e.changedTouches[0].clientY-tsy;
+    if(Math.abs(dx)<18&&Math.abs(dy)<18) return;
+    if(Math.abs(dx)>Math.abs(dy)) setDir(dx>0?{x:1,y:0}:{x:-1,y:0});
+    else setDir(dy>0?{x:0,y:1}:{x:0,y:-1});
+  });
+
+  function setDir(d){
+    if(d.x===-dir.x&&d.y===-dir.y) return; // no 180
+    nextDir=d;
+  }
+
+  // keyboard (desktop preview)
+  document.addEventListener('keydown',function(e){
+    var m={ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0},ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1}};
+    if(m[e.key]){ e.preventDefault(); if(running) setDir(m[e.key]); }
+  });
+
+  // difficulty picker
+  document.querySelectorAll('.diff-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.diff-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      document.getElementById('diffNote').textContent=DIFFS[b.getAttribute('data-d')].note;
+    });
+  });
+
+  function showStartBest(){
+    var b=best[diff]||0;
+    document.getElementById('bestLine').textContent = b?('Best ('+DIFFS[diff].label+'): '+b):'';
+  }
+
+  document.getElementById('startBtn').addEventListener('click',start);
+  document.getElementById('againBtn').addEventListener('click',start);
+
+  resize();
+  snake=[{x:3,y:3}]; dir={x:1,y:0}; nextDir=dir; food=null;
+  showStartBest();
+})();
+</script>
+</body>
+</html>
