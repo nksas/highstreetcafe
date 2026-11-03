@@ -114,6 +114,20 @@
   footer .brand{font-family:var(--font-head);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
   footer .brand .accent{color:var(--yellow);}
   footer .sub{color:var(--grey);font-size:11.5px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+
+  /* ═════ mobile UI fixes ═════ */
+  @media (max-width:560px){
+    .topbar{gap:10px;padding:6px 10px;font-size:11px;}
+    .topbar a[href*="instagram"],.topbar a[href*="mailto"]{display:none;}
+    .banner .inner{padding:42px 20px 46px;}
+    .nav{padding:10px 16px;}
+  }
+
+  @media (max-width:420px){
+    .play-card{padding:28px 18px;margin-top:-22px;}
+    .btn-play{padding:14px 30px;font-size:15px;}
+    .infobox{padding:20px 18px;}
+  }
 </style>
 </head>
 <body>

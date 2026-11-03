@@ -222,6 +222,40 @@
   .fbrand-sub{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--grey);margin-bottom:14px;}
   .footer_bottom{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:16px 20px;font-size:12px;color:var(--grey);}
   .footer_bottom a{color:var(--yellow);text-decoration:none;font-weight:500;}
+
+  /* ═════ mobile UI fixes ═════ */
+  @media (max-width:560px){
+    /* topbar: only phone + hours visible, tighter */
+    .topbar{gap:12px;padding:6px 10px;}
+    .topbar a[href*="instagram"],.topbar a[href*="mailto"]{display:none;}
+    /* stamp: smaller, out of the way */
+    .banner .stamp{width:58px;height:58px;font-size:9px;top:14px;left:14px;border-width:2px;}
+    /* hero: shorter, smaller text, no right-side dots collision */
+    .slides{padding:52px 20px 56px;min-height:0;}
+    .slide h1{font-size:clamp(32px,9vw,44px);}
+    .slide .kicker{font-size:12px;letter-spacing:1.5px;gap:10px;}
+    .slide .kicker::before{width:2rem;}
+    .slide .tag{font-size:14px;}
+    .btn_yellow{padding:12px 26px;font-size:14px;}
+    .dots{flex-direction:row;top:auto;bottom:16px;right:50%;transform:translateX(50%);}
+    /* sections breathe less on small screens */
+    section{padding:52px 0;}
+    .sec_sub{margin-bottom:30px;}
+    /* circles: 2-up grid stays but smaller */
+    .circle_fact{width:112px;height:112px;}
+    .circle_fact .n{font-size:26px;}
+    /* footer stack tighter */
+    .footer_main{padding:34px 20px 24px;}
+  }
+  @media (max-width:380px){
+    .circle_fact{width:100px;height:100px;}
+    .slide h1{font-size:30px;}
+  }
+  /* tap targets: bigger hit area on nav links for phones */
+  @media (hover:none){
+    .nav .links a{padding:10px 14px;}
+    .qcard,.cta{padding-top:16px;padding-bottom:16px;}
+  }
 </style>
 </head>
 <body>
@@ -355,7 +389,7 @@
 <section class="moments_sec">
   <div class="wrap">
     <div class="center">
-      <div class="sec_label"><span class="deco">✦</span> Moments @ Highstreet <span class="deco">✦</span></div>
+      <div class="sec_label"><span class="deco">✦</span> Moments @ Tealogy Cafe <span class="deco">✦</span></div>
       <h2 class="sec_head" style="color:var(--text);">Every Day, Chai &amp; Good Company</h2>
     </div>
     <div class="moments">
