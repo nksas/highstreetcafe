@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport"="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%230F1D22%22%2F%3E%3Cpath%20d%3D%22M17%2025h30l-5%2025c-.5%203-3%205-6%205h-8c-3%200-5.5-2-6-5z%22%20fill%3D%22%23c05a3a%22%2F%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2225%22%20rx%3D%2215%22%20ry%3D%224.5%22%20fill%3D%22%23e8a94a%22%2F%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2225%22%20rx%3D%2210.5%22%20ry%3D%223%22%20fill%3D%22%23d89e0e%22%2F%3E%3Cpath%20d%3D%22M25%2017c2-2.5-2-4.5%200-7M32%2018c2-2.5-2-4.5%200-7M39%2017c2-2.5-2-4.5%200-7%22%20fill%3D%22none%22%20stroke%3D%22%23fbc603%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
 <title>Free WiFi — Tealogy Cafe Moradabad</title>
 <meta name="description" content="Free guest WiFi at Tealogy Cafe Moradabad. Scan the QR, tap to connect, or type the password. Enjoy kulhad chai while you surf."><meta name="keywords" content="cafe in moradabad, tea cafe moradabad, kulhad chai moradabad, tealogy moradabad, best cafe moradabad, restaurant moradabad, chai cafe kanth road, tdi city gate moradabad cafe, veg restaurant moradabad, shakes moradabad, burger pizza moradabad, tealogy cafe moradabad">
 <link rel="canonical" href="https://highstreetcafe.in/wifi.html">
@@ -120,6 +121,24 @@
   .tap-cta .btn:hover{background:transparent;color:var(--yellow-dark);}
   .tap-cta .btn:active{transform:scale(.97);}
   .tap-note{font-size:12.5px;color:var(--grey);margin-top:14px;}
+  .tap-badge{
+    display:inline-block;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+    background:rgba(45,60,75,.10);color:var(--slate);border-radius:20px;padding:6px 14px;
+  }
+  .tap-badge.ios{background:rgba(47,111,176,.12);color:#2f6fb0;}
+  .tap-badge.android{background:rgba(95,122,74,.14);color:#5f7a4a;}
+  .tap-badge.desktop{background:rgba(192,90,58,.12);color:#c05a3a;}
+  .qr-mini{
+    width:120px;height:120px;border-radius:10px;border:2px solid var(--yellow);padding:5px;
+    background:#fff;display:block;margin:14px auto 4px;
+  }
+  .steps{list-style:none;padding:0;margin:14px 0 0;text-align:left;max-width:340px;margin-left:auto;margin-right:auto;}
+  .steps li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text);margin:8px 0;}
+  .steps .n{
+    flex:0 0 22px;height:22px;border-radius:50%;background:var(--yellow);color:#000;
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .steps b{color:var(--text);}
 
   /* manual panel */
   .cred{
@@ -229,8 +248,11 @@
 
     <div class="panel" id="panel-tap">
       <div class="tap-cta">
-        <a class="btn" href="wifi:Airtel_nava_7338">📶 Connect to WiFi</a>
-        <p class="tap-note">Works on most modern phones — if nothing happens, use the <b>Type It In</b> tab above.</p>
+        <span class="tap-badge" id="tapBadge">📱 Detecting your phone…</span>
+        <div id="tapBody" style="margin-top:12px;">
+          <a class="btn" href="wifi:Airtel_nava_7338">📶 Connect to WiFi</a>
+          <p class="tap-note">Detecting device…</p>
+        </div>
       </div>
     </div>
 
@@ -256,7 +278,7 @@
     <ul>
       <li><b>iPhone:</b> Camera app → point at QR → tap the WiFi banner at the top → Join.</li>
       <li><b>Android:</b> Camera app → point at QR → tap "Connect to network".</li>
-      <li><b>Tap to Connect</b> needs your phone's browser to support WiFi links — if it doesn't respond, the QR or manual method always works.</li>
+      <li><b>Tap to Connect:</b> this page now detects your device — iPhone shows the QR, Android tries auto-connect first, and both get step-by-step help and a copy-password button.</li>
       <li>Still stuck? Ask any staff member — we'll get you connected.</li>
     </ul>
   </div>
@@ -290,6 +312,92 @@ function show(which){
     txt.textContent = shown ? PW : '••••••••';
     btn.textContent = shown ? '🙈 Hide' : '👁 Show';
   });
+})();
+
+/* ── smart tap-to-connect: adapt to device ──
+   No browser can silently join WiFi. iOS Safari rejects wifi: entirely;
+   some Android browsers (Chrome on Android 12+ needs Settings permission)
+   handle wifi:; and desktops never do. So we detect, attempt where it can
+   work, and give every device a fast manual fallback. */
+(function(){
+  var SSID='Airtel_nava_7338', PW='air11065';
+  var QR='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACb0lEQVR4nO1bwW3DMAw80QL6tIEMkFGc1TpSN4hH6QbWs0ACFiSlOHmkyacwAZEPQ5H4IEQdeZSYxHhTFnpXEwhVis1CHBeUVOWEq3wAG6WU0ZZyAAYOQkYGMFx0mFAmsH0wcNLJ+SzfcvBgK4Uq1FGGnlHdNjCWSRzF8lOQJ3hDbBYcHpfxJ2FehVZM+xjwVOj5Uo+q5YMrykpKexjwt9CL9V5UmTXqSSSc14FTOl7AmrEwMtcR+bC1Z9UM4NpwVA7GNzB/fXCav/MFi60NHmyl7lWzoOe2Cz+Jl2kALxPMS/e1M3W/WeRgB0pGOulH6GAlhmiRsOTGN8iBrZ2rgkUsPfFavaUj+yk03n6ed7eVQhWKnvlbbiyMsg+cTkLjDWXKEwNbPo4LjA4KE2ReJf5tkXAU0EFgpcSQ9raVuleF+ughW0k4FNESWSOhzHF4C17y1qyZSScEURVqkbecYgvimRYJLSbeKubAliNvsbinBbw7lM3bQuQtT95CjX8yoVzeeHvkLYfe4lZWbSN1VMtbFW+0t63UvSpq6WvXGOqwirJaLCsdDE7or946tyC4EXpTibzlx1vr0HxkUuutjSyanHe3lUIVt/f9epeBlrJuc9FF47LnadSrpmtSl+ntoHY/xWuku0jIwv+2a4wKsFonByf083YMeXqUNrUid+0SGJeTPEQWfVSu/WvY31YKVdyJRkJpoLHmtNaSES8mLo9LkXfiI7M1EC7a/SR5y9gh/b8Bfwu9WO9FlWuVJW+QJYM/pwe8LUdZdWJrz6r5oefJOqsTK8p0we4OS744sJW6V03xjyDEcXlbKFTxtvwCTJik7xEilY4AAAAASUVORK5CYII=';
+  var badge=document.getElementById('tapBadge'), body=document.getElementById('tapBody');
+  var ua=navigator.userAgent;
+  var isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var isAndroid=/Android/.test(ua);
+  var enc=encodeURIComponent;
+
+  function wifiHref(){
+    // Android expects T; WPA default. iOS ignores wifi: but harmless to try.
+    return 'wifi://?' + 'ssid=' + enc('"'+SSID+'"') + '&WPA=' + enc('"'+PW+'"') + '&T=WPA';
+  }
+  function showBadge(cls,text){ badge.className='tap-badge '+cls; badge.textContent=text; }
+
+  function stepsHTML(items){
+    return '<ol class="steps">'+items.map(function(s,i){
+      return '<li><span class="n">'+(i+1)+'</span><span>'+s+'</span></li>';
+    }).join('')+'</ol>';
+  }
+  function copyBtn(){
+    return '<div class="btn-row"><button class="btn-copy" id="tapCopy">📋 Copy Password</button></div>';
+  }
+  function wireCopy(){
+    var b=document.getElementById('tapCopy'); if(!b) return;
+    b.addEventListener('click',function(){
+      function done(){ b.textContent='✓ Copied!'; setTimeout(function(){ b.textContent='📋 Copy Password'; },2000); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(PW).then(done).catch(fb);
+      } else fb();
+      function fb(){
+        var ta=document.createElement('textarea'); ta.value=PW;
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); done(); }catch(e){ b.textContent=PW; }
+        document.body.removeChild(ta);
+      }
+    });
+  }
+
+  if(isIOS){
+    // iOS Safari: wifi: is a dead scheme — no browser API exists. QR via
+    // Camera is Apple's only join flow, so surface it directly.
+    showBadge('ios','🍎 iPhone · Scan is fastest');
+    body.innerHTML =
+      '<img class="qr-mini" src="'+QR+'" alt="WiFi QR — '+SSID+'">'+
+      '<p class="how"><b>Point the Camera app at this code</b> — a WiFi banner drops from the top. Tap it, then <b>Join</b>.</p>'+
+      stepsHTML([
+        'Open <b>Camera</b> (or Control Center → scan icon)',
+        'Frame the QR above — the yellow WiFi banner appears',
+        'Tap the banner → <b>Join Network</b>. Done!'
+      ])+
+      '<p class="tap-note">Or Settings → Wi-Fi → pick <b>'+SSID+'</b> → paste the password.</p>'+copyBtn();
+    wireCopy();
+  } else if(isAndroid){
+    // Android: Chrome/WebView only honors wifi: from Android 12+ and only
+    // after the user grants the Settings-access prompt — still worth trying,
+    // then catching the no-op.
+    showBadge('android','🤖 Android · One tap to try');
+    body.innerHTML =
+      '<a class="btn" id="tapTry" href="'+wifiHref()+'">📶 Try Auto-Connect</a>'+
+      '<p class="tap-note" id="tapTryNote">Tap the button — if your phone asks permission, allow it and it will open the WiFi join screen with the password filled in. Nothing happened? Use the steps below.</p>'+
+      stepsHTML([
+        'Open <b>Settings → Network &amp; Internet → Internet</b>',
+        'Tap <b>'+SSID+'</b> — or the QR scan icon next to it',
+        'Paste the password and tap <b>Connect</b>'
+      ])+
+      '<img class="qr-mini" src="'+QR+'" alt="WiFi QR — '+SSID+'">'+
+      '<p class="how" style="font-size:12.5px;">The Camera or Google Lens can also scan this code to join.</p>'+copyBtn();
+    wireCopy();
+  } else {
+    // Desktop / tablet: laptop joins itself, phone next to it does the QR.
+    showBadge('desktop','💻 On a computer?');
+    body.innerHTML =
+      '<p class="how" style="margin-bottom:8px;">Join <b>'+SSID+'</b> from your device\'s WiFi menu using this password:</p>'+
+      '<p style="font-family:var(--font-head);font-size:24px;letter-spacing:1px;">'+PW+'</p>'+copyBtn()+
+      '<img class="qr-mini" src="'+QR+'" alt="WiFi QR — '+SSID+'">'+
+      '<p class="how" style="font-size:12.5px;">Or scan this with the phone you want to connect.</p>';
+    wireCopy();
+  }
 })();
 
 /* copy password */
